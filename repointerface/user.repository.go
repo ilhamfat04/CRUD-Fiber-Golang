@@ -7,7 +7,7 @@ import (
 )
 
 type Repository interface {
-	AddUser() ([]entity.User, error)
+	AddUser(user entity.User) (entity.User, error)
 }
 
 type repository struct {
@@ -18,7 +18,7 @@ func RepositoryUser(db *gorm.DB) *repository {
 	return &repository{db} // agar bisa diakses di main
 }
 
-func (r *repository) AddBook(user entity.User) (entity.User, error) {
+func (r *repository) AddUser(user entity.User) (entity.User, error) {
 	err := r.db.Create(&user).Error
 	return user, err
 }

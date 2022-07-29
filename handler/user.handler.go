@@ -1,22 +1,29 @@
 package handler
 
 import (
-	"go-fiber/database"
 	"go-fiber/model/entity"
 	"go-fiber/model/request"
-	repointerface "go-fiber/repo-interface"
+
+	"go-fiber/repointerface"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func HelloWorld(c *fiber.Ctx) error {
+type userHandler struct {
+	UserRepository repointerface.Repository
+}
+
+func HandlerUser(UserRepository repointerface.Repository) *userHandler {
+	return &userHandler{UserRepository} // agar bisa diakses di main
+}
+
+func (h *userHandler) HelloWorld(c *fiber.Ctx) error {
 	return c.Status(500).JSON(fiber.Map{
 		"Response": "Hello World using Golang",
 	})
 }
 
-func AddUserHandler(c *fiber.Ctx) error {
-	userRepository := repointerface.RepositoryUser(database.DB)
+func (h *userHandler) AddUserHandler(c *fiber.Ctx) error {
 	user := new(request.AddUserRequest) //take pattern data submission
 	if err := c.BodyParser(user); err != nil {
 		return err
@@ -28,7 +35,7 @@ func AddUserHandler(c *fiber.Ctx) error {
 		Password: user.Password,
 	}
 	// err := database.DB.Create(&userData).Error
-	userData, err := userRepository.AddBook(userData)
+	userDataInput, err := h.UserRepository.AddUser(userData)
 	if err != nil {
 		c.Status(500).JSON(fiber.Map{
 			"Message": "Failed to Insert Data",
@@ -36,6 +43,6 @@ func AddUserHandler(c *fiber.Ctx) error {
 	}
 	return c.JSON(fiber.Map{
 		"Message": "Success Insert Data",
-		"Data":    userData,
+		"Data":    userDataInput,
 	})
 }

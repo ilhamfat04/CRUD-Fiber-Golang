@@ -3,6 +3,7 @@ package main
 import (
 	"go-fiber/database"
 	"go-fiber/database/migration"
+	"go-fiber/repointerface"
 	"go-fiber/route"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,6 +12,7 @@ import (
 func main() {
 	// INITIAL DB
 	database.DatabaseInit()
+	userRepository := repointerface.RepositoryUser(database.DB)
 
 	// RUN MIGRATION
 	migration.RunMigration()
@@ -21,13 +23,13 @@ func main() {
 	})
 
 	// GROUP ROUTE
-	api := app.Group("/api/v1", func(c *fiber.Ctx) error { // middleware for /api/v1
+	groupRouteApi := app.Group("/api/v1", func(c *fiber.Ctx) error { // middleware for /api/v1
 		c.Set("Version", "v1")
 		return c.Next()
 	})
 
 	// INITIAL ROUTE
-	route.RouteInit(api)
+	route.RouteInit(groupRouteApi, userRepository)
 
 	app.Listen("localhost:8000")
 }
