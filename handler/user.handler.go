@@ -6,6 +6,7 @@ import (
 
 	"go-fiber/repointerface"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -28,6 +29,16 @@ func (h *userHandler) AddUserHandler(c *fiber.Ctx) error {
 	if err := c.BodyParser(user); err != nil {
 		return err
 	}
+
+	validation := validator.New()
+	errValidation := validation.Struct(user)
+	if errValidation != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"Message": "Failed",
+			"err":     errValidation.Error(),
+		})
+	}
+
 	// data form pattern submit to pattern entity db user
 	userData := entity.User{
 		Name:     user.Name,
