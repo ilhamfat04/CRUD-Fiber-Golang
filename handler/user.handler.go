@@ -3,6 +3,7 @@ package handler
 import (
 	"go-fiber/model/entity"
 	"go-fiber/model/request"
+	"strconv"
 
 	"go-fiber/repointerface"
 
@@ -29,7 +30,7 @@ func (h *userHandler) AddUserHandler(c *fiber.Ctx) error {
 		return err
 	}
 	// data form pattern submit to pattern entity db user
-	userData := entity.User{
+	userData := request.AddUserRequest{
 		Name:     user.Name,
 		Email:    user.Email,
 		Password: user.Password,
@@ -44,5 +45,44 @@ func (h *userHandler) AddUserHandler(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"Message": "Success Insert Data",
 		"Data":    userDataInput,
+	})
+}
+
+func (h *userHandler) GetUsersHandler(c *fiber.Ctx) error {
+	users, err := h.UserRepository.GetUsers()
+
+	if err != nil {
+		c.Status(500).JSON(fiber.Map{
+			"Message": "Failed to Fetch Data",
+		})
+	}
+
+	var userResponses []entity.User
+	for _, b := range users {
+		userResponse := b
+
+		userResponses = append(userResponses, userResponse)
+	}
+
+	return c.JSON(fiber.Map{
+		"Message": "Success Get Datas",
+		"Data":    userResponses,
+	})
+}
+
+func (h *userHandler) GetUserHandler(c *fiber.Ctx) error {
+	idString := c.Params("id")
+	id, _ := strconv.Atoi(idString)
+	user, err := h.UserRepository.GetUser(int(id))
+
+	if err != nil {
+		c.Status(500).JSON(fiber.Map{
+			"Message": "Failed to Fetch Data",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"Message": "Success Get Data",
+		"Data":    user,
 	})
 }

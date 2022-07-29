@@ -12,4 +12,6 @@ func RouteInit(r fiber.Router, userRepository repointerface.Repository) {
 
 	r.Get("/", h.HelloWorld)
 	r.Post("/user", h.AddUserHandler)
+	r.Get("/users", h.GetUsersHandler)
+	r.Get("/user/:id", h.GetUserHandler)
 }
