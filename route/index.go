@@ -9,5 +9,4 @@ import (
 func RouteInit(r fiber.Router) {
 	r.Get("/", handler.HelloWorld)
 	r.Post("/user", handler.AddUserHandler)
-
 }
