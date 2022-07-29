@@ -2,13 +2,12 @@ package repointerface
 
 import (
 	"go-fiber/model/entity"
-	"go-fiber/model/request"
 
 	"gorm.io/gorm"
 )
 
 type Repository interface {
-	AddUser(user request.AddUserRequest) (request.AddUserRequest, error)
+	AddUser(user entity.User) (entity.User, error)
 	GetUsers() ([]entity.User, error)
 	GetUser(ID int) (entity.User, error)
 }
@@ -21,7 +20,7 @@ func RepositoryUser(db *gorm.DB) *repository {
 	return &repository{db} // agar bisa diakses di main
 }
 
-func (r *repository) AddUser(user request.AddUserRequest) (request.AddUserRequest, error) {
+func (r *repository) AddUser(user entity.User) (entity.User, error) {
 	err := r.db.Create(&user).Error
 	return user, err
 }
