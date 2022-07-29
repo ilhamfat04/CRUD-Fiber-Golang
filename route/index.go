@@ -1,12 +1,13 @@
 package route
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"go-fiber/handler"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func RouteInit(r fiber.Router) {
-	r.Get("/", func(c *fiber.Ctx) error {
-		return c.Status(500).JSON(fiber.Map{
-			"Response": "Hello World",
-		})
-	})
+	r.Get("/", handler.HelloWorld)
+	r.Post("/user", handler.AddUserHandler)
 
 }
