@@ -1,12 +1,21 @@
 package main
 
 import (
+	"go-fiber/database"
+	"go-fiber/database/migration"
 	"go-fiber/route"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
+	// INITIAL DB
+	database.DatabaseInit()
+
+	// RUN MIGRATION
+	migration.RunMigration()
+
+	// INITIAL ROUTE
 	app := fiber.New(fiber.Config{
 		StrictRouting: true,
 	})
