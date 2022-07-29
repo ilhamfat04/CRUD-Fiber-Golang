@@ -3,6 +3,7 @@ package handler
 import (
 	"go-fiber/model/entity"
 	"go-fiber/model/request"
+	"go-fiber/model/response"
 	"strconv"
 
 	"go-fiber/repointerface"
@@ -94,6 +95,15 @@ func (h *userHandler) GetUserHandler(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"Message": "Success Get Data",
-		"Data":    user,
+		"Data":    convertUserResponse(user),
 	})
+}
+
+func convertUserResponse(u entity.User) response.UserResponse {
+	return response.UserResponse{
+		ID:       u.ID,
+		Name:     u.Name,
+		Email:    u.Email,
+		Password: u.Password,
+	}
 }
