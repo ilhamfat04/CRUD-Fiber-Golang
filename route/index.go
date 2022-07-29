@@ -15,4 +15,5 @@ func RouteInit(r fiber.Router, userRepository repointerface.Repository) {
 	r.Get("/users", h.GetUsersHandler)
 	r.Get("/user/:id", h.GetUserHandler)
 	r.Put("/user/:id", h.UpdateUserHandler)
+	r.Delete("/user/:id", h.DeleteUserHandler)
 }

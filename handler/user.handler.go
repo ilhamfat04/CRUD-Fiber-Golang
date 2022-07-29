@@ -144,6 +144,32 @@ func (h *userHandler) UpdateUserHandler(c *fiber.Ctx) error {
 	})
 }
 
+func (h *userHandler) DeleteUserHandler(c *fiber.Ctx) error {
+	idString := c.Params("id")
+	id, _ := strconv.Atoi(idString)
+
+	var user entity.User
+	user, errGetUser := h.UserRepository.GetUser(int(id))
+	if errGetUser != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"Message": "Data Not Found",
+		})
+	}
+
+	_, err := h.UserRepository.DeleteUser(user)
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"Message": "Internal server error",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"Message": "Success Delete Data",
+	})
+
+}
+
 func convertUserResponse(u entity.User) response.UserResponse {
 	return response.UserResponse{
 		ID:       u.ID,
