@@ -10,6 +10,7 @@ type Repository interface {
 	AddUser(user entity.User) (entity.User, error)
 	GetUsers() ([]entity.User, error)
 	GetUser(ID int) (entity.User, error)
+	UpdateUser(user entity.User) (entity.User, error)
 }
 
 type repository struct {
@@ -34,5 +35,10 @@ func (r *repository) GetUsers() ([]entity.User, error) {
 func (r *repository) GetUser(ID int) (entity.User, error) {
 	var user entity.User
 	err := r.db.Find(&user, ID).Error
+	return user, err
+}
+
+func (r *repository) UpdateUser(user entity.User) (entity.User, error) {
+	err := r.db.Save(&user).Error
 	return user, err
 }

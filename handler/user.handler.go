@@ -99,6 +99,51 @@ func (h *userHandler) GetUserHandler(c *fiber.Ctx) error {
 	})
 }
 
+func (h *userHandler) UpdateUserHandler(c *fiber.Ctx) error {
+	userRequest := new(request.UpdateUserRequest) //take pattern data submission
+	if err := c.BodyParser(userRequest); err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"Message": "Bad Request",
+		})
+	}
+
+	idString := c.Params("id")
+	id, _ := strconv.Atoi(idString)
+
+	var user entity.User
+	user, errGetUser := h.UserRepository.GetUser(int(id))
+	if errGetUser != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"Message": "Data Not Found",
+		})
+	}
+
+	if userRequest.Name != "" {
+		user.Name = userRequest.Name
+	}
+
+	if userRequest.Email != "" {
+		user.Email = userRequest.Email
+	}
+
+	if userRequest.Password != "" {
+		user.Password = userRequest.Password
+	}
+
+	updatedUser, errUpdate := h.UserRepository.UpdateUser(user)
+
+	if errUpdate != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"Message": "Internal server error",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"Message": "Success Get Data",
+		"Data":    convertUserResponse(updatedUser),
+	})
+}
+
 func convertUserResponse(u entity.User) response.UserResponse {
 	return response.UserResponse{
 		ID:       u.ID,
