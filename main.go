@@ -17,9 +17,6 @@ func main() {
 
 	// initial route
 	app := fiber.New()
-	// app := mux.NewRouter()
-	// app.HandleFunc("/", YourHandler)
-
 	// group route
 	groupRouteApi := app.Group("/api/v1", func(c *fiber.Ctx) error { // middleware for /api/v1
 		c.Set("Version", "v1")
@@ -30,5 +27,4 @@ func main() {
 	routes.RouteInit(groupRouteApi)
 
 	app.Listen("localhost:8000")
-	// http.ListenAndServe("localhost:8080", app)
 }
