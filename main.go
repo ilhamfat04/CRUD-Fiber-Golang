@@ -3,24 +3,22 @@ package main
 import (
 	"go-fiber/database"
 	"go-fiber/pkg/mysql"
-	"go-fiber/repositories"
 	"go-fiber/routes"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
-	// initil DB
+	// initial DB
 	mysql.DatabaseInit()
-	userRepository := repositories.RepositoryUser(mysql.DB)
 
 	// run migration
 	database.RunMigration()
 
 	// initial route
-	app := fiber.New(fiber.Config{
-		StrictRouting: true,
-	})
+	app := fiber.New()
+	// app := mux.NewRouter()
+	// app.HandleFunc("/", YourHandler)
 
 	// group route
 	groupRouteApi := app.Group("/api/v1", func(c *fiber.Ctx) error { // middleware for /api/v1
@@ -28,8 +26,9 @@ func main() {
 		return c.Next()
 	})
 
-	// INITIAL ROUTE
-	routes.RouteInit(groupRouteApi, userRepository)
+	// initial route
+	routes.RouteInit(groupRouteApi)
 
 	app.Listen("localhost:8000")
+	// http.ListenAndServe("localhost:8080", app)
 }

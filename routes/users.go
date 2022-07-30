@@ -2,12 +2,14 @@ package routes
 
 import (
 	"go-fiber/handlers"
+	"go-fiber/pkg/mysql"
 	"go-fiber/repositories"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func RouteInit(r fiber.Router, userRepository repositories.UserRepository) {
+func UserRoute(r fiber.Router) {
+	userRepository := repositories.RepositoryUser(mysql.DB)
 	h := handlers.HandlerUser(userRepository)
 
 	r.Get("/", h.HelloWorld)

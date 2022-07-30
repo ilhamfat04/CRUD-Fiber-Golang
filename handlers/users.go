@@ -15,7 +15,7 @@ type handler struct {
 }
 
 func HandlerUser(UserRepository repositories.UserRepository) *handler {
-	return &handler{UserRepository} // agar bisa diakses di main
+	return &handler{UserRepository} // to make access at main
 }
 
 func (h *handler) HelloWorld(c *fiber.Ctx) error {

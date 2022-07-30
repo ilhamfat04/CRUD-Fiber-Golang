@@ -2,3 +2,5 @@ install fiber   : go get github.com/gofiber/fiber/v2
 install gorm    : go get -u gorm.io/gorm
 
 gorm model : https://gorm.io/docs/models.html
+
+nodemon --exec "go run" main.go
